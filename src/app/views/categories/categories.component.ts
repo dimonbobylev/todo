@@ -19,8 +19,8 @@ export class CategoriesComponent implements OnInit {
     this.dataHandler.categoriesSubject.subscribe(categories => this.categories = categories);
   }
 
-  // tslint:disable-next-line:typedef
-  showTaskByCategory(category: Category) {
+
+  showTasksByCategory(category: Category): void {
     this.selectedCategory = category;
     this.dataHandler.filTaskByCategory(category);
   }
