@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {DataHendlerService} from '../../service/data-hendler.service';
 import {Category} from '../../model/Category';
 
@@ -9,6 +9,7 @@ import {Category} from '../../model/Category';
 })
 export class CategoriesComponent implements OnInit {
 
+  @Input()
   categories: Category[];
   selectedCategory: Category;
 
