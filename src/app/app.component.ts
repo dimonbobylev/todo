@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {Task} from './model/Task';
-import {DataHendlerService} from './service/data-hendler.service';
 import {Category} from './model/Category';
+import {DataHandlerService} from './service/data-hendler.service';
+
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  templateUrl: 'app.component.html',
+  styles: []
 })
 export class AppComponent implements OnInit {
 
@@ -14,16 +15,40 @@ export class AppComponent implements OnInit {
   tasks: Task[];
   categories: Category[];
 
+  private selectedCategory: Category = null;
+
 
   constructor(
-    private dataHandler: DataHendlerService, // фасад для работы с данными
+    private dataHandler: DataHandlerService, // фасад для работы с данными
   ) {
   }
 
   ngOnInit(): void {
-    this.dataHandler.getAllTasks().subscribe(tasks => this.tasks = tasks);
+    // this.dataHandler.getAllTasks().subscribe(tasks => this.tasks = tasks);
     this.dataHandler.getAllCategories().subscribe(categories => this.categories = categories);
+
+    this.onSelectCategory(null); // показать все задачи
+
   }
 
 
+  // изменение категории
+  public onSelectCategory(category: Category) {
+
+    this.selectedCategory = category;
+
+    this.dataHandler.searchTasks(
+      this.selectedCategory,
+      null,
+      null,
+      null
+    ).subscribe(tasks => {
+      this.tasks = tasks;
+    });
+
+  }
+
+  private onUpdateTask(task: Task): void {
+    console.log(task);
+  }
 }

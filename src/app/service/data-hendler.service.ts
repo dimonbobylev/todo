@@ -1,38 +1,40 @@
 import {Injectable} from '@angular/core';
 import {Category} from '../model/Category';
-import {TestData} from '../data/TestData';
 import {Task} from '../model/Task';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {Observable} from 'rxjs';
 import {TaskDAOArray} from '../data/impl/TaskDAOArray';
 import {CategoryDAOArray} from '../data/impl/CategoryDAOArray';
+import {Priority} from '../model/Priority';
+
+// класс реализовывает методы, которые нужны frontend'у, т.е. для удобной работы представлений
+// напоминает паттер Фасад (Facade) - выдает только то, что нужно для функционала
+// сервис не реализовывает напрямую интерфейсы DAO, а использует их реализации (в данном случае массивы)
+// может использовать не все методы DAO, а только нужные
 
 @Injectable({
   providedIn: 'root'
 })
-export class DataHendlerService {
+export class DataHandlerService {
 
-  // tasksSubject = new BehaviorSubject<Task[]>(TestData.tasks);
-  // categoriesSubject = new BehaviorSubject<Category[]>(TestData.categories);
+  // релизации работы с данными с помощью массива
+  // (можно подставлять любые релизации, в том числе с БД. Главное - соблюдать интерфейсы)
   private taskDaoArray = new TaskDAOArray();
-  private categoriesDaoArray = new CategoryDAOArray();
+  private categoryDaoArray = new CategoryDAOArray();
 
   constructor() {
   }
 
- // tslint:disable-next-line:typedef
- //  filTask() {
- //    this.tasksSubject.next(TestData.tasks);
- //  }
- //
- //  // tslint:disable-next-line:typedef
- //  filTaskByCategory(category: Category) {
- //    const tasks = TestData.tasks.filter(task => task.category === category);
- //    this.tasksSubject.next(tasks);
- //  }
   getAllTasks(): Observable<Task[]> {
     return this.taskDaoArray.getAll();
   }
+
   getAllCategories(): Observable<Category[]> {
-    return this.categoriesDaoArray.getAll();
+    return this.categoryDaoArray.getAll();
   }
+
+  // поиск задач по параметрам
+  searchTasks(category: Category, searchText: string, status: boolean, priority: Priority): Observable<Task[]> {
+    return this.taskDaoArray.search(category, searchText, status, priority);
+  }
+
 }
